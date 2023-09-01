@@ -1,4 +1,5 @@
 <script lang="ts">
+	import Found from './Found.svelte';
 	import Grid from './Grid.svelte';
 	import { lvls } from './level';
 
@@ -31,9 +32,11 @@
 <div class="game">
 	<div class="info" />
 	<div class="game-container">
-		<Grid {tiles} {found} />
+		<Grid {tiles} on:found={(e) => (found = [...found, e.detail])} {found} />
 	</div>
-	<div class="info" />
+	<div class="info">
+		<Found {found} />
+	</div>
 </div>
 
 <style>

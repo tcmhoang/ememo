@@ -1,11 +1,14 @@
 <script lang="ts">
 	export let emoji: string;
 	export let flipped: boolean;
+	export let found: boolean;
 </script>
 
 <div class="tile" class:flipped>
-	<button on:click />
-	<span>{emoji}</span>
+	{#if !found}
+		<button on:click />
+		<span>{emoji}</span>
+	{/if}
 </div>
 
 <style>

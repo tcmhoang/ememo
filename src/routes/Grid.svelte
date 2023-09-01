@@ -1,8 +1,11 @@
 <script lang="ts">
+	import { createEventDispatcher } from 'svelte';
 	import Tile from './Tile.svelte';
 
 	export let tiles: string[];
 	export let found: string[];
+
+	let dispatcher = createEventDispatcher();
 
 	let selected = new Set<Number>();
 	let timeoutPid: number | null;
@@ -20,7 +23,7 @@
 			const [a, b] = [...selected];
 			if (tiles[+a] == tiles[+b]) {
 				selected.clear();
-				found = [...found, tiles[+a]];
+				dispatcher('found', tiles[+a]);
 			} else {
 				timeoutPid = setTimeout(() => {
 					selected.clear();
@@ -38,8 +41,9 @@
 	{#each tiles as emoji, i}
 		<Tile
 			{emoji}
-			flipped={selected.has(i) || found.includes(emoji)}
+			flipped={selected.has(i)}
 			on:click={() => onTileClick(i)}
+			found={found.includes(tiles[i])}
 		/>
 	{/each}
 </div>
