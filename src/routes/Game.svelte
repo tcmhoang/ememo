@@ -9,7 +9,6 @@
 		let cpemojis: string[] = [...emojis];
 
 		function removeAt(index: number) {
-			console.log('called');
 			const idx: number = Math.floor(index);
 			const validatedIdx: number =
 				idx > cpemojis.length - 1 ? cpemojis.length - 1 : idx;
@@ -32,7 +31,7 @@
 <div class="game">
 	<div class="info" />
 	<div class="game-container">
-		<Grid {tiles} />
+		<Grid {tiles} {found} />
 	</div>
 	<div class="info" />
 </div>
