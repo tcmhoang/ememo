@@ -1,9 +1,15 @@
 <script lang="ts">
+	import { onMount } from 'svelte';
+	import Page from './+page.svelte';
+	import Countdown from './Countdown.svelte';
 	import Found from './Found.svelte';
 	import Grid from './Grid.svelte';
-	import { lvls } from './level';
+	import { lvls, type Level } from './level';
 
-	const tiles: string[] = initPairs(lvls[0].emojis, lvls[0].size ** 2 / 2);
+	const lvl: Level = lvls[0];
+	let isPlayingState = true;
+
+	const tiles: string[] = initPairs(lvl.emojis, lvl.size ** 2 / 2);
 	let found: string[] = [];
 
 	function initPairs(emojis: string[], size: number) {
@@ -27,10 +33,32 @@
 			.sort((a, b) => a.sort - b.sort)
 			.map(({ e }) => e);
 	}
+	const duration = lvl.duration;
+	let remaining = lvl.duration;
+
+	function countdown() {
+		const start = Date.now();
+		let remainingOnPaused = remaining;
+
+		function loop() {
+			if (!isPlayingState) return;
+			requestAnimationFrame(loop);
+			remaining = remainingOnPaused - (Date.now() - start);
+
+			if (remaining <= 0) {
+				// end
+				isPlayingState = false;
+			}
+		}
+		loop();
+	}
+	onMount(countdown);
 </script>
 
 <div class="game">
-	<div class="info" />
+	<div class="info">
+		<Countdown {remaining} {duration} />
+	</div>
 	<div class="game-container">
 		<Grid {tiles} on:found={(e) => (found = [...found, e.detail])} {found} />
 	</div>
@@ -51,11 +79,9 @@
 	.info {
 		width: 80em;
 		height: 10em;
-		background: purple;
 	}
 	.game-container {
 		width: 80em;
 		height: 80em;
-		background: teal;
 	}
 </style>
