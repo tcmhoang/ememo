@@ -1,3 +1,11 @@
+<script lang="ts" context="module">
+	export function toSvgPath(emoji: string) {
+		return `/twemoji/${[...emoji]
+			.map((c) => c.codePointAt(0)!.toString(16))
+			.join('-')}.svg`;
+	}
+</script>
+
 <script lang="ts">
 	export let emoji: string;
 	export let flipped: boolean;
@@ -7,7 +15,7 @@
 <div class="tile" class:flipped>
 	{#if !found}
 		<button on:click />
-		<span>{emoji}</span>
+		<img src={toSvgPath(emoji)} alt={emoji} />
 	{/if}
 </div>
 
@@ -29,8 +37,9 @@
 		background: crimson;
 	}
 
-	span {
-		font-size: 5em;
+	img {
+		width: 6em;
+		height: 6em;
 		pointer-events: none;
 	}
 </style>
