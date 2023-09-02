@@ -1,6 +1,5 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
-	import Page from './+page.svelte';
 	import Countdown from './Countdown.svelte';
 	import Found from './Found.svelte';
 	import Grid from './Grid.svelte';
@@ -9,7 +8,7 @@
 	const lvl: Level = lvls[0];
 	let isPlayingState = true;
 
-	const tiles: string[] = initPairs(lvl.emojis, lvl.size ** 2 / 2);
+	const tiles: { e: string; id: string }[] = initPairs(lvl.emojis, lvl.size ** 2 / 2);
 	let found: string[] = [];
 
 	function initPairs(emojis: string[], size: number) {
@@ -28,7 +27,10 @@
 			removeAt(Math.random() * (cpemojis.length - 1))
 		);
 
-		return [...randomSet, ...randomSet]
+		return [
+			...randomSet.map((e) => ({ e, id: `${e}:a` })),
+			...randomSet.map((e) => ({ e, id: `${e}:b` }))
+		]
 			.map((e) => ({ e, sort: Math.random() }))
 			.sort((a, b) => a.sort - b.sort)
 			.map(({ e }) => e);

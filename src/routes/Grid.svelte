@@ -2,7 +2,7 @@
 	import { createEventDispatcher } from 'svelte';
 	import Tile from './Tile.svelte';
 
-	export let tiles: string[];
+	export let tiles: { e: string; id: string }[];
 	export let found: string[];
 
 	let dispatcher = createEventDispatcher();
@@ -17,13 +17,12 @@
 			selected.clear();
 		}
 		selected.add(i);
-		console.log(selected);
 
 		if (selected.size == 2) {
 			const [a, b] = [...selected];
-			if (tiles[+a] == tiles[+b]) {
+			if (tiles[+a].e == tiles[+b].e) {
 				selected.clear();
-				dispatcher('found', tiles[+a]);
+				dispatcher('found', tiles[+a].e);
 			} else {
 				timeoutPid = setTimeout(() => {
 					selected.clear();
@@ -38,12 +37,13 @@
 </script>
 
 <div class="grid">
-	{#each tiles as emoji, i}
+	{#each tiles as tile, i}
 		<Tile
-			{emoji}
+			emoji={tile.e}
+			id={tile.id}
 			flipped={selected.has(i)}
 			on:click={() => onTileClick(i)}
-			found={found.includes(tiles[i])}
+			found={found.includes(tile.e)}
 		/>
 	{/each}
 </div>

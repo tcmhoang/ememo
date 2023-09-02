@@ -7,7 +7,9 @@
 </script>
 
 <script lang="ts">
+	import { send } from './tileTransition';
 	export let emoji: string;
+	export let id: string;
 	export let flipped: boolean;
 	export let found: boolean;
 </script>
@@ -15,7 +17,7 @@
 <div class="tile" class:flipped={flipped || found}>
 	<button on:click />
 	{#if !found}
-		<img src={toSvgPath(emoji)} alt={emoji} />
+		<img src={toSvgPath(emoji)} alt={emoji} out:send={{ key: id }} />
 	{/if}
 </div>
 
