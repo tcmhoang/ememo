@@ -29,9 +29,9 @@
 		font-size: 8em;
 		width: 1em;
 		height: 1em;
-		border-radius: 50%;
 		border-color: transparent;
 		background-color: transparent;
+		border: hidden;
 	}
 
 	svg {

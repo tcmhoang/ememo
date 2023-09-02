@@ -12,34 +12,45 @@
 	export let found: boolean;
 </script>
 
-<div class="tile" class:flipped>
+<div class="tile" class:flipped={flipped || found}>
+	<button on:click />
 	{#if !found}
-		<button on:click />
 		<img src={toSvgPath(emoji)} alt={emoji} />
 	{/if}
 </div>
 
 <style>
 	.tile {
-		background: yellow;
 		display: flex;
 		justify-content: center;
 		align-items: center;
+		transition: transform 0.3s;
+		transform-style: preserve-3d;
 	}
 
 	button {
 		position: absolute;
 		width: 100%;
 		height: 100%;
+		backface-visibility: hidden;
+		background-color: #eee;
+		border: hidden;
+		border-radius: 1em;
+		font-size: inherit;
 	}
 
-	.flipped button {
-		background: crimson;
+	.flipped {
+		border-radius: 1em;
+		border: 0.5em solid #eee;
+		background-color: #fff;
+		transform: rotateY(180deg);
 	}
 
 	img {
 		width: 6em;
 		height: 6em;
 		pointer-events: none;
+		transform: rotateY(180deg);
+		backface-visibility: hidden;
 	}
 </style>
