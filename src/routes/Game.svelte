@@ -8,7 +8,9 @@
 	const lvl: Level = lvls[0];
 	let isPlayingState = true;
 
-	const tiles: { e: string; id: string }[] = initPairs(lvl.emojis, lvl.size ** 2 / 2);
+	const pairCount = lvl.size ** 2 / 2;
+
+	const tiles: { e: string; id: string }[] = initPairs(lvl.emojis, pairCount);
 	let found: string[] = [];
 
 	function initPairs(emojis: string[], size: number) {
@@ -59,10 +61,25 @@
 
 <div class="game">
 	<div class="info">
-		<Countdown {remaining} {duration} />
+		<Countdown
+			{remaining}
+			{duration}
+			on:click={() => {
+				// TODO(tcmhoang): paused the gam
+			}}
+		/>
 	</div>
 	<div class="game-container">
-		<Grid {tiles} on:found={(e) => (found = [...found, e.detail])} {found} />
+		<Grid
+			{tiles}
+			on:found={(e) => {
+				found = [...found, e.detail];
+				if (found.length == pairCount) {
+					// TODO(tcmhoang): win
+				}
+			}}
+			{found}
+		/>
 	</div>
 	<div class="info">
 		<Found {found} />
