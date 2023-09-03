@@ -4,7 +4,6 @@
 
 	export let tiles: { e: string; id: string }[];
 	export let found: string[];
-	export let size: number;
 
 	let dispatch = createEventDispatcher();
 
