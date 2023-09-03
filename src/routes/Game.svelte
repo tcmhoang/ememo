@@ -1,17 +1,52 @@
 <script lang="ts">
-	import { onMount } from 'svelte';
+	import { createEventDispatcher } from 'svelte';
 	import Countdown from './Countdown.svelte';
 	import Found from './Found.svelte';
 	import Grid from './Grid.svelte';
-	import { lvls, type Level } from './level';
+	import type { Level } from './level';
 
-	const lvl: Level = lvls[0];
-	let isPlayingState = true;
+	const dispatch = createEventDispatcher();
 
-	const pairCount = lvl.size ** 2 / 2;
+	let isPlayingState: boolean = true;
 
-	const tiles: { e: string; id: string }[] = initPairs(lvl.emojis, pairCount);
+	let size: number = 0;
+	let remaining: number = 0;
+	let pairCount: number = 0;
+	let duration: number = 0;
+	let tiles: { e: string; id: string }[] = [];
 	let found: string[] = [];
+
+	export function init(lvl: Level) {
+		size = lvl.size;
+		pairCount = size ** 2 / 2;
+		tiles = initPairs(lvl.emojis, pairCount);
+		duration = remaining = lvl.duration;
+		resume();
+	}
+
+	export function resume() {
+		isPlayingState = true;
+		countdown();
+
+		dispatch('play');
+	}
+
+	function countdown() {
+		const start = Date.now();
+		let remainingOnPaused = remaining;
+
+		function loop() {
+			if (!isPlayingState) return;
+			requestAnimationFrame(loop);
+			remaining = remainingOnPaused - (Date.now() - start);
+
+			if (remaining <= 0) {
+				isPlayingState = false;
+				dispatch('lose');
+			}
+		}
+		loop();
+	}
 
 	function initPairs(emojis: string[], size: number) {
 		let cpemojis: string[] = [...emojis];
@@ -37,35 +72,16 @@
 			.sort((a, b) => a.sort - b.sort)
 			.map(({ e }) => e);
 	}
-	const duration = lvl.duration;
-	let remaining = lvl.duration;
-
-	function countdown() {
-		const start = Date.now();
-		let remainingOnPaused = remaining;
-
-		function loop() {
-			if (!isPlayingState) return;
-			requestAnimationFrame(loop);
-			remaining = remainingOnPaused - (Date.now() - start);
-
-			if (remaining <= 0) {
-				// end
-				isPlayingState = false;
-			}
-		}
-		loop();
-	}
-	onMount(countdown);
 </script>
 
-<div class="game">
+<div class="game" style="--size: {size}">
 	<div class="info">
 		<Countdown
 			{remaining}
 			{duration}
 			on:click={() => {
-				// TODO(tcmhoang): paused the gam
+				isPlayingState = false;
+				dispatch('pause');
 			}}
 		/>
 	</div>
@@ -75,10 +91,11 @@
 			on:found={(e) => {
 				found = [...found, e.detail];
 				if (found.length == pairCount) {
-					// TODO(tcmhoang): win
+					dispatch('win');
 				}
 			}}
 			{found}
+			{size}
 		/>
 	</div>
 	<div class="info">

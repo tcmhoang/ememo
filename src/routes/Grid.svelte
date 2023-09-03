@@ -4,8 +4,9 @@
 
 	export let tiles: { e: string; id: string }[];
 	export let found: string[];
+	export let size: number;
 
-	let dispatcher = createEventDispatcher();
+	let dispatch = createEventDispatcher();
 
 	let selected = new Set<Number>();
 	let timeoutPid: number | null;
@@ -22,7 +23,7 @@
 			const [a, b] = [...selected];
 			if (tiles[+a].e == tiles[+b].e) {
 				selected.clear();
-				dispatcher('found', tiles[+a].e);
+				dispatch('found', tiles[+a].e);
 			} else {
 				timeoutPid = setTimeout(() => {
 					selected.clear();
@@ -51,7 +52,7 @@
 <style>
 	.grid {
 		display: grid;
-		grid-template: repeat(4, 1fr) / repeat(4, 1fr);
+		grid-template: repeat(var(--size), 1fr) / repeat(var(--size), 1fr);
 		height: 100%;
 		gap: 0.5em;
 		perspective: 100vw;
