@@ -1,5 +1,7 @@
 <div class="background">
-	<slot />
+	<div class="modal">
+		<slot />
+	</div>
 </div>
 
 <style>
