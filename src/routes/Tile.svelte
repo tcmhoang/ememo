@@ -1,7 +1,9 @@
 <script lang="ts" context="module">
+	import { base } from '$app/paths';
+
 	export function toSvgPath(emoji: string) {
-		return `/twemoji/${[...emoji]
-			.map((c) => c.codePointAt(0)!.toString(16))
+		return `${base}/twemoji/${[...emoji]
+			.map((c) => c.codePointAt(0)?.toString(16))
 			.join('-')}.svg`;
 	}
 </script>
